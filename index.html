@@ -1,110 +1,100 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ECO-RACE 4.0 - ĐƯỜNG ĐUA XANH</title>
-
-  <!-- Tailwind (tùy chọn) + font -->
   <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet" />
-
-  <!-- CSS tách ra -->
-  <link rel="stylesheet" href="style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
 </head>
-<body class="bg-gray-50 text-gray-800 font-inter">
 
-  <!-- Header -->
-  <header class="max-w-6xl mx-auto p-4 text-center">
-    <div class="flex items-center justify-center gap-4">
-      <img src="Banner.png" alt="Banner" class="h-20 object-contain" onerror="this.onerror=null;this.src='https://i.ibb.co/x8sCQgvs/Banner.png'">
-      <div>
-        <h1 class="text-3xl font-extrabold text-green-700">ECO-RACE 4.0 — ĐƯỜNG ĐUA XANH</h1>
-        <p class="text-sm text-gray-600">Hệ thống theo dõi phân loại rác — Upload ảnh lên ImgBB (image hosting)</p>
-      </div>
-    </div>
-    <p id="app-status" class="text-xs text-blue-500 mt-2">Đang khởi tạo...</p>
+<body class="bg-gray-50 text-gray-800 font-[Inter]">
+
+  <!-- Hiệu ứng pháo hoa -->
+  <div id="fireworks-container" class="hidden"></div>
+
+  <header class="text-center my-6">
+    <img src="Banner.png" class="h-20 mx-auto" alt="ECO-RACE Banner"
+         onerror="this.src='https://placehold.co/300x80/10B981/ffffff?text=ECO-RACE'">
+    <h1 class="text-4xl font-extrabold text-green-700">ECO-RACE 4.0</h1>
+    <p class="text-2xl font-extrabold text-green-700">ĐƯỜNG ĐUA XANH</p>
+    <p class="text-lg text-gray-500 font-medium mt-1">Trường THPT DTNT Đam San</p>
+    <p class="text-sm text-gray-400">Hệ thống theo dõi phân loại rác (DEMO)</p>
   </header>
 
-  <main class="max-w-6xl mx-auto p-4 grid gap-6 lg:grid-cols-3">
-    <!-- Form / input -->
-    <section class="lg:col-span-2 bg-white p-6 rounded-xl shadow">
-      <h2 class="text-xl font-bold text-green-700 mb-3">♻️ Gửi báo cáo thu gom</h2>
+  <!-- Tabs -->
+  <div class="flex justify-center mb-6 flex-wrap gap-3">
+    <button class="tab-btn bg-green-700 text-white px-4 py-2 rounded-full"
+            onclick="switchView('input-view')">♻️ Nhập Liệu</button>
+    <button class="tab-btn bg-gray-200 px-4 py-2 rounded-full"
+            onclick="switchView('dashboard-view')">📊 Bảng Xếp Hạng</button>
+    <button class="tab-btn bg-gray-200 px-4 py-2 rounded-full"
+            onclick="switchView('media-view')">📸 Kỷ Niệm Xanh</button>
+  </div>
 
-      <form id="reportForm" class="space-y-4">
-        <div>
-          <label class="block text-sm font-semibold">🏷️ Tên đội / người (Team / Person)</label>
-          <input id="name" type="text" class="w-full mt-1 p-2 border rounded" placeholder="Ví dụ: Đội Xanh Lá" required>
-        </div>
+  <!-- 1️⃣ Nhập dữ liệu -->
+  <section id="input-view" class="app-view">
+    <div class="bg-white p-6 rounded-xl shadow-xl max-w-md mx-auto border-t-4 border-green-500">
+      <h2 class="text-2xl font-bold text-green-700 text-center mb-4">Ghi Nhận Tái Chế</h2>
+      <form id="input-form" class="space-y-4">
+        <label class="block">
+          <span class="text-gray-700">🏫 Chọn Lớp</span>
+          <select id="class-select" class="w-full mt-1 p-2 border rounded"></select>
+        </label>
 
-        <div class="grid grid-cols-2 gap-3">
-          <div>
-            <label class="block text-sm font-semibold">🗂️ Loại rác (Trash type)</label>
-            <select id="type" class="w-full mt-1 p-2 border rounded">
-              <option value="chai_plastic">Chai nhựa (plastic bottle)</option>
-              <option value="lon_nhom">Lon nhôm (aluminum can)</option>
-              <option value="giay">Giấy (paper)</option>
-              <option value="khac">Khác (other)</option>
-            </select>
-          </div>
-          <div>
-            <label class="block text-sm font-semibold">📍 Vị trí (Location)</label>
-            <div class="flex gap-2">
-              <button id="geoBtn" type="button" class="px-3 py-2 bg-green-600 text-white rounded">Lấy vị trí</button>
-              <div id="coords" class="flex-1 p-2 border rounded text-sm">Chưa lấy vị trí</div>
-            </div>
-          </div>
-        </div>
+        <label class="block">
+          <span class="text-gray-700">🗓️ Ngày Ghi Nhận</span>
+          <input type="date" id="log-date" class="w-full mt-1 p-2 border rounded">
+        </label>
 
-        <div>
-          <label class="block text-sm font-semibold">📝 Mô tả (Description)</label>
-          <textarea id="desc" class="w-full mt-1 p-2 border rounded" rows="3" placeholder="Mô tả vị trí, số lượng, ghi chú..."></textarea>
-        </div>
+        <label class="block">
+          <span class="text-gray-700">🥤 Chai Nhựa (số lượng)</span>
+          <input type="number" id="bottle-count" class="w-full mt-1 p-2 border rounded" placeholder="VD: 10">
+        </label>
 
-        <div>
-          <label class="block text-sm font-semibold">📷 Ảnh (Upload ảnh thật lên ImgBB)</label>
-          <div class="mt-2 p-3 border-dashed border rounded uploader">
-            <input id="photoInput" type="file" accept="image/*" multiple>
-            <p class="text-xs text-gray-500 mt-2">Chọn ảnh (tối đa 6 ảnh) → ảnh sẽ được upload lên ImgBB khi ấn Gửi.</p>
-            <div id="localPreview" class="mt-3 grid grid-cols-3 gap-2"></div>
-          </div>
-        </div>
+        <label class="block">
+          <span class="text-gray-700">📄 Giấy (gram)</span>
+          <input type="number" id="paper-weight" class="w-full mt-1 p-2 border rounded" placeholder="VD: 500">
+        </label>
 
-        <div class="flex gap-3">
-          <button id="submitBtn" class="px-4 py-2 bg-green-600 text-white rounded font-semibold">🎉 Gửi & Upload</button>
-          <button id="saveLocal" type="button" class="px-4 py-2 bg-gray-200 rounded">💾 Lưu local</button>
-          <button id="exportJson" type="button" class="px-4 py-2 bg-blue-200 rounded">📤 Xuất JSON</button>
-          <div id="uploadStatus" class="ml-auto text-sm text-gray-600"></div>
-        </div>
+        <label class="block">
+          <span class="text-gray-700">📸 Ảnh Kỷ Niệm</span>
+          <input type="file" id="photo-input" accept="image/*" class="w-full mt-1 p-2 border rounded bg-gray-50">
+        </label>
+
+        <button type="button" onclick="logRecycling()" class="w-full bg-green-600 text-white font-bold py-3 rounded-lg hover:bg-green-700">
+          🎉 GỬI DỮ LIỆU 🎉
+        </button>
       </form>
+    </div>
+  </section>
 
-      <hr class="my-4">
+  <!-- 2️⃣ Bảng xếp hạng -->
+  <section id="dashboard-view" class="app-view hidden">
+    <div class="bg-white p-6 rounded-xl shadow-xl max-w-4xl mx-auto border-t-4 border-green-500">
+      <h2 class="text-3xl font-bold text-green-700 text-center mb-4">🏆 BẢNG XẾP HẠNG TUẦN</h2>
+      <table class="w-full text-center border">
+        <thead class="bg-green-100">
+          <tr><th class="p-2">Lớp</th><th class="p-2">Điểm</th></tr>
+        </thead>
+        <tbody id="leaderboard-body"></tbody>
+      </table>
+    </div>
+  </section>
 
-      <h3 class="font-semibold text-green-700 mb-2">🏁 Gallery (đã upload)</h3>
-      <div id="gallery" class="grid gap-3"></div>
-    </section>
+  <!-- 3️⃣ Kỷ niệm xanh -->
+  <section id="media-view" class="app-view hidden">
+    <div class="bg-white p-6 rounded-xl shadow-xl max-w-5xl mx-auto border-t-4 border-green-500">
+      <h2 class="text-3xl font-bold text-green-700 text-center mb-4">📸 KỶ NIỆM XANH</h2>
+      <div id="gallery" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4"></div>
+    </div>
+  </section>
 
-    <!-- Sidebar / dashboard -->
-    <aside class="bg-white p-6 rounded-xl shadow">
-      <h3 class="font-bold text-green-700">ℹ️ Hướng dẫn</h3>
-      <ul class="mt-2 text-sm space-y-2">
-        <li>📌 Ảnh sẽ được upload lên <strong>ImgBB (image hosting)</strong> và nhận URL để hiển thị.</li>
-        <li>⚠️ Nếu bạn muốn an toàn (không lộ API key), hãy tạo proxy server để che key.</li>
-        <li>🚀 Deploy lên <strong>GitHub Pages (GitHub Pages)</strong> để share cho mọi người.</li>
-      </ul>
-
-      <hr class="my-3">
-
-      <h4 class="font-semibold">📁 Ảnh local (preview)</h4>
-      <div id="localList" class="mt-2 text-xs text-gray-600"></div>
-    </aside>
-  </main>
-
-  <footer class="max-w-6xl mx-auto p-4 text-center text-sm text-gray-500">
-    <div>Made with ♻️ — Dữ liệu chính lưu local (localStorage). Ảnh lưu trên ImgBB.</div>
+  <footer class="text-center text-gray-400 text-sm mt-12 pb-6">
+    © 2025 Trường THPT DTNT Đam San — Dự án ECO-RACE 4.0
   </footer>
 
-  <!-- JS tách ra -->
-  <script src="main.js"></script>
+  <script src="script.js"></script>
 </body>
 </html>

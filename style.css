@@ -1,23 +1,21 @@
-/* Core font family */
-.font-inter { font-family: 'Inter', sans-serif; }
+body { font-family: 'Inter', sans-serif; }
 
-/* Small utility */
-.uploader input[type=file] { width:100%; }
-
-/* Local preview thumbs */
-#localPreview img {
-  width:100%;
-  height:96px;
-  object-fit:cover;
-  border-radius:8px;
-  display:block;
+#fireworks-container {
+  position: fixed; top: 0; left: 0;
+  width: 100%; height: 100%;
+  pointer-events: none; z-index: 50;
 }
 
-/* Gallery item */
-.gallery-item { border:1px solid #e6eee6; padding:8px; border-radius:8px; background:#fbfffb; }
-.gallery-item img { width:100%; height:140px; object-fit:cover; border-radius:6px; }
+.firework {
+  position: absolute;
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  background: var(--color, #10B981);
+  animation: launch 2s ease-in-out forwards;
+}
 
-/* Responsive */
-@media (max-width: 768px) {
-  #localPreview { grid-template-columns: repeat(2, 1fr); }
+@keyframes launch {
+  0% { transform: translateY(100vh); opacity: 1; }
+  80% { transform: translateY(20vh); opacity: 1; }
+  100% { transform: translateY(0) scale(2); opacity: 0; }
 }
