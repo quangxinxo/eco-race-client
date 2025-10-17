@@ -185,12 +185,24 @@ function fileToBase64(file) {
 
 async function uploadViaProxy(file) {
   const base64 = await fileToBase64(file);
+  console.log("Đang gửi tới proxy:", PROXY_URL);
+
   const res = await fetch(PROXY_URL, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ imageBase64: base64, name: file.name }),
+  }).catch(err => {
+    console.error("Lỗi fetch:", err);
+    throw err;
   });
-  const data = await res.json();
+
+  console.log("Kết quả phản hồi thô:", res);
+  const data = await res.json().catch(err => {
+    console.error("Lỗi parse JSON:", err);
+    throw err;
+  });
+
+  console.log("Proxy response:", data);
   if (!res.ok || !data.url) throw new Error(data.error || 'Upload lỗi!');
   return data.url;
 }
